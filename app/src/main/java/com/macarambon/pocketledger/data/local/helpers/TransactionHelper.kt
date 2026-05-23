@@ -134,6 +134,20 @@ class TransactionHelper(private val db: PocketLedgerDatabase) {
         return PocketLedgerResult.Ok(Unit)
     }
 
+    suspend fun removeWallet(
+        context: Context,
+        userId: Long,
+        walletId: Long,
+    ): PocketLedgerResult<Unit> {
+        val wallet = db.walletDao().findById(walletId)
+            ?: return PocketLedgerResult.Err.Validation(context.getString(R.string.error_wallet_not_found))
+        if (wallet.userId != userId) {
+            return PocketLedgerResult.Err.Validation(context.getString(R.string.error_invalid_wallet))
+        }
+        db.walletDao().deleteById(walletId)
+        return PocketLedgerResult.Ok(Unit)
+    }
+
     private fun transactionDelta(type: TransactionType, amount: Double): Double =
         when (type) {
             TransactionType.INCOME, TransactionType.INTEREST -> amount

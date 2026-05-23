@@ -17,14 +17,17 @@ class WalletPresenter(
     private val context: Context,
 ) : WalletContract.Presenter {
 
+    private var userId: Long? = null
+
     override fun loadWallets() {
         scope.launch {
-            val userId = withContext(Dispatchers.IO) { model.getCurrentUserId(context) }
-            if (userId == null) {
+            val id = withContext(Dispatchers.IO) { model.getCurrentUserId(context) }
+            if (id == null) {
                 view.showToast(context.getString(R.string.error_session_expired))
                 return@launch
             }
-            val wallets = withContext(Dispatchers.IO) { model.getWallets(userId) }
+            userId = id
+            val wallets = withContext(Dispatchers.IO) { model.getWallets(id) }
             view.showWallets(wallets)
         }
     }
@@ -76,6 +79,24 @@ class WalletPresenter(
                     is com.macarambon.pocketledger.data.PocketLedgerResult.Ok -> {
                         view.showToast(context.getString(R.string.success_wallet_created))
                         view.clearCreateForm()
+                        loadWallets()
+                    }
+                    else -> result.notifyErrorIfNotOk { view.showToast(it) }
+                }
+            }
+        }
+    }
+
+    override fun onRemoveWalletClicked(walletId: Long) {
+        val id = userId ?: return
+        scope.launch {
+            val result = withContext(Dispatchers.IO) {
+                model.removeWallet(context, id, walletId)
+            }
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is com.macarambon.pocketledger.data.PocketLedgerResult.Ok -> {
+                        view.showToast(context.getString(R.string.success_wallet_removed))
                         loadWallets()
                     }
                     else -> result.notifyErrorIfNotOk { view.showToast(it) }

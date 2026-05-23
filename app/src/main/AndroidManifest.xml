@@ -43,14 +43,6 @@
             android:name=".screens.transactionhistory.TransactionHistoryActivity"
             android:exported="false" />
 
-        <activity
-            android:name=".screens.transaction.TransactionActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".screens.category.CategoryActivity"
-            android:exported="false" />
-
     </application>
 
 </manifest>

@@ -20,22 +20,6 @@ interface TransactionDao {
 
     @Query(
         """
-        SELECT COALESCE(SUM(amount), 0.0) FROM transactions
-        WHERE userId = :userId AND type IN ('INCOME', 'INTEREST')
-        """,
-    )
-    suspend fun getIncomeTotal(userId: Long): Double
-
-    @Query(
-        """
-        SELECT COALESCE(SUM(amount), 0.0) FROM transactions
-        WHERE userId = :userId AND type = 'EXPENSE'
-        """,
-    )
-    suspend fun getExpenseTotal(userId: Long): Double
-
-    @Query(
-        """
         SELECT
             t.id AS transactionId,
             w.name AS walletName,
@@ -51,24 +35,6 @@ interface TransactionDao {
         """,
     )
     suspend fun getLedgerEntries(userId: Long): List<LedgerEntryRow>
-
-    @Query(
-        """
-        SELECT
-            t.id AS transactionId,
-            w.name AS walletName,
-            c.name AS categoryName,
-            t.amount AS amount,
-            t.date AS date,
-            t.type AS type
-        FROM transactions t
-        INNER JOIN wallets w ON t.walletId = w.id
-        INNER JOIN categories c ON t.categoryId = c.id
-        WHERE t.userId = :userId AND c.name = :categoryName
-        ORDER BY t.date DESC, t.id DESC
-        """,
-    )
-    suspend fun getLedgerEntriesByCategory(userId: Long, categoryName: String): List<LedgerEntryRow>
 
     @Query(
         """

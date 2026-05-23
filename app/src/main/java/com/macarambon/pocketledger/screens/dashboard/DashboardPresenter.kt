@@ -5,9 +5,8 @@ import com.macarambon.pocketledger.R
 import com.macarambon.pocketledger.data.local.entity.CategoryEntity
 import com.macarambon.pocketledger.data.local.entity.TransactionType
 import com.macarambon.pocketledger.data.local.entity.WalletEntity
-import com.macarambon.pocketledger.data.errorMessage
 import com.macarambon.pocketledger.data.notifyErrorIfNotOk
-import com.macarambon.pocketledger.screens.transaction.TransactionPresenter
+import com.macarambon.pocketledger.data.rules.BusinessRules
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,8 +28,10 @@ class DashboardPresenter(
         scope.launch {
             val user = withContext(Dispatchers.IO) { model.getCurrentUser(context) }
             if (user == null) {
-                view.showToast(context.getString(R.string.error_session_expired))
-                view.navigateToLogin()
+                withContext(Dispatchers.Main) {
+                    view.showToast(context.getString(R.string.error_session_expired))
+                    view.navigateToLogin()
+                }
                 return@launch
             }
             userId = user.id
@@ -64,11 +65,11 @@ class DashboardPresenter(
         appliedInterestRate: String,
     ) {
         if (wallets.isEmpty() || categories.isEmpty()) {
-            view.showToast("Please create a wallet and category first.")
+            view.showToast(context.getString(R.string.error_wallet_category_required))
             return
         }
         val parsedAmount = amount.toDoubleOrNull()
-        if (parsedAmount == null || parsedAmount <= 0) {
+        if (parsedAmount == null || !BusinessRules.isValidTransactionAmount(parsedAmount)) {
             view.showToast(context.getString(R.string.error_invalid_amount))
             return
         }
@@ -76,25 +77,52 @@ class DashboardPresenter(
             view.showToast(context.getString(R.string.error_field_required))
             return
         }
-        val wallet = wallets.getOrNull(walletIndex) ?: return
-        val category = categories.getOrNull(categoryIndex) ?: return
-        val type = TransactionPresenter.transactionTypes.getOrNull(typeIndex) ?: TransactionType.EXPENSE
-        val rate = if (type == TransactionType.INTEREST) appliedInterestRate.toDoubleOrNull() else null
+        if (BusinessRules.parseTransactionDateTime(date) == null) {
+            view.showToast(context.getString(R.string.error_invalid_datetime))
+            return
+        }
+        val wallet = wallets.getOrNull(walletIndex)
+        if (wallet == null) {
+            view.showToast(context.getString(R.string.error_wallet_not_found))
+            return
+        }
+        val category = categories.getOrNull(categoryIndex)
+        if (category == null) {
+            view.showToast(context.getString(R.string.error_category_not_found))
+            return
+        }
+        val type = TransactionType.formTypes.getOrNull(typeIndex) ?: TransactionType.EXPENSE
+        val rate = if (type == TransactionType.INTEREST) {
+            val parsedRate = appliedInterestRate.toDoubleOrNull()
+            if (parsedRate == null || !BusinessRules.isValidInterestRate(parsedRate)) {
+                view.showToast(context.getString(R.string.error_applied_interest_required))
+                return
+            }
+            parsedRate
+        } else {
+            null
+        }
 
         val id = userId ?: return
         scope.launch {
             val result = withContext(Dispatchers.IO) {
                 model.addTransaction(context, id, wallet.id, category.id, parsedAmount, date, type, rate)
             }
-            when (result) {
-                is com.macarambon.pocketledger.data.PocketLedgerResult.Ok -> {
-                    wallets = withContext(Dispatchers.IO) { model.getWallets(id) }
-                    view.showToast(context.getString(R.string.success_transaction_added))
-                    view.clearTransactionForm()
-                    view.showTransactionFormOptions(wallets, categories)
-                    refreshDashboard()
+            if (result is com.macarambon.pocketledger.data.PocketLedgerResult.Ok) {
+                wallets = withContext(Dispatchers.IO) { model.getWallets(id) }
+            }
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is com.macarambon.pocketledger.data.PocketLedgerResult.Ok -> {
+                        view.showToast(context.getString(R.string.success_transaction_added))
+                        view.clearTransactionForm()
+                        view.showTransactionFormOptions(wallets, categories)
+                    }
+                    else -> result.notifyErrorIfNotOk { view.showToast(it) }
                 }
-                else -> view.showToast(result.errorMessage().orEmpty())
+            }
+            if (result is com.macarambon.pocketledger.data.PocketLedgerResult.Ok) {
+                refreshDashboard()
             }
         }
     }
@@ -107,14 +135,18 @@ class DashboardPresenter(
         if (userId == null) return
         scope.launch {
             val result = withContext(Dispatchers.IO) { model.addCategory(context, name) }
-            when (result) {
-                is com.macarambon.pocketledger.data.PocketLedgerResult.Ok -> {
-                    categories = withContext(Dispatchers.IO) { model.getCategories() }
-                    view.showToast(context.getString(R.string.success_category_added))
-                    view.clearCategoryNameField()
-                    view.showTransactionFormOptions(wallets, categories)
+            if (result is com.macarambon.pocketledger.data.PocketLedgerResult.Ok) {
+                categories = withContext(Dispatchers.IO) { model.getCategories() }
+            }
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is com.macarambon.pocketledger.data.PocketLedgerResult.Ok -> {
+                        view.showToast(context.getString(R.string.success_category_added))
+                        view.clearCategoryNameField()
+                        view.showTransactionFormOptions(wallets, categories)
+                    }
+                    else -> result.notifyErrorIfNotOk { view.showToast(it) }
                 }
-                else -> result.notifyErrorIfNotOk { view.showToast(it) }
             }
         }
     }
@@ -127,14 +159,20 @@ class DashboardPresenter(
             val result = withContext(Dispatchers.IO) {
                 model.removeTransaction(context, id, transactionId)
             }
-            when (result) {
-                is com.macarambon.pocketledger.data.PocketLedgerResult.Ok -> {
-                    wallets = withContext(Dispatchers.IO) { model.getWallets(id) }
-                    view.showToast(context.getString(R.string.success_transaction_removed))
-                    view.showTransactionFormOptions(wallets, categories)
-                    refreshDashboard()
+            if (result is com.macarambon.pocketledger.data.PocketLedgerResult.Ok) {
+                wallets = withContext(Dispatchers.IO) { model.getWallets(id) }
+            }
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is com.macarambon.pocketledger.data.PocketLedgerResult.Ok -> {
+                        view.showToast(context.getString(R.string.success_transaction_removed))
+                        view.showTransactionFormOptions(wallets, categories)
+                    }
+                    else -> result.notifyErrorIfNotOk { view.showToast(it) }
                 }
-                else -> view.showToast(result.errorMessage().orEmpty())
+            }
+            if (result is com.macarambon.pocketledger.data.PocketLedgerResult.Ok) {
+                refreshDashboard()
             }
         }
     }
@@ -142,7 +180,7 @@ class DashboardPresenter(
     override fun onLogoutClicked() {
         scope.launch {
             withContext(Dispatchers.IO) { model.logout(context) }
-            view.navigateToLogin()
+            withContext(Dispatchers.Main) { view.navigateToLogin() }
         }
     }
 

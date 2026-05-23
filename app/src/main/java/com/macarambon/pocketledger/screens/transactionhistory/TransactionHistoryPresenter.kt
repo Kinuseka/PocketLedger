@@ -2,8 +2,8 @@ package com.macarambon.pocketledger.screens.transactionhistory
 
 import android.content.Context
 import com.macarambon.pocketledger.R
-import com.macarambon.pocketledger.data.errorMessage
 import com.macarambon.pocketledger.data.local.entity.WalletEntity
+import com.macarambon.pocketledger.data.notifyErrorIfNotOk
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,8 +24,10 @@ class TransactionHistoryPresenter(
         scope.launch {
             val user = withContext(Dispatchers.IO) { model.getCurrentUser(context) }
             if (user == null) {
-                view.showToast(context.getString(R.string.error_session_expired))
-                view.navigateToLogin()
+                withContext(Dispatchers.Main) {
+                    view.showToast(context.getString(R.string.error_session_expired))
+                    view.navigateToLogin()
+                }
                 return@launch
             }
             userId = user.id
@@ -50,12 +52,14 @@ class TransactionHistoryPresenter(
             val result = withContext(Dispatchers.IO) {
                 model.removeTransaction(context, id, transactionId)
             }
-            when (result) {
-                is com.macarambon.pocketledger.data.PocketLedgerResult.Ok -> {
-                    view.showToast(context.getString(R.string.success_transaction_removed))
-                    refreshLedger()
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is com.macarambon.pocketledger.data.PocketLedgerResult.Ok -> {
+                        view.showToast(context.getString(R.string.success_transaction_removed))
+                        refreshLedger()
+                    }
+                    else -> result.notifyErrorIfNotOk { view.showToast(it) }
                 }
-                else -> view.showToast(result.errorMessage().orEmpty())
             }
         }
     }
@@ -66,7 +70,9 @@ class TransactionHistoryPresenter(
             val entries = withContext(Dispatchers.IO) {
                 model.getLedger(id, selectedWalletId)
             }
-            view.showLedger(entries)
+            withContext(Dispatchers.Main) {
+                view.showLedger(entries)
+            }
         }
     }
 }

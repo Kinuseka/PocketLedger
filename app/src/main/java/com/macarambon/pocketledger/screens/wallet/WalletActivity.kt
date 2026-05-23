@@ -2,6 +2,7 @@ package com.macarambon.pocketledger.screens.wallet
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
@@ -53,7 +54,9 @@ class WalletActivity : AppCompatActivity(), WalletContract.View {
         spinnerWalletType = findViewById(R.id.spinnerWalletType)
         spinnerInterestFrequency = findViewById(R.id.spinnerInterestFrequency)
 
-        adapter = WalletAdapter()
+        adapter = WalletAdapter { wallet ->
+            confirmRemoveWallet(wallet)
+        }
         findViewById<RecyclerView>(R.id.recyclerviewWallets).apply {
             layoutManager = LinearLayoutManager(this@WalletActivity)
             this.adapter = this@WalletActivity.adapter
@@ -158,5 +161,16 @@ class WalletActivity : AppCompatActivity(), WalletContract.View {
 
     override fun setCreateInProgress(inProgress: Boolean) {
         buttonCreateWallet.isEnabled = !inProgress
+    }
+
+    private fun confirmRemoveWallet(wallet: WalletEntity) {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.confirm_delete_wallet_title)
+            .setMessage(getString(R.string.confirm_delete_wallet_message, wallet.name))
+            .setPositiveButton(R.string.action_remove) { _, _ ->
+                presenter.onRemoveWalletClicked(wallet.id)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 }

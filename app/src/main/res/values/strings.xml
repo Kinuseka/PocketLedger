@@ -109,14 +109,18 @@
     <string name="error_interest_rate_range">Interest rate must be between 0 and 100.</string>
     <string name="error_applied_interest_required">Applied interest rate is required for Interest transactions.</string>
     <string name="error_no_account">No account found. Please register first.</string>
+    <string name="error_wallet_category_required">Please create a wallet and at least one category first.</string>
 
     <!-- Success -->
     <string name="success_registered">Account created. Please log in.</string>
     <string name="success_wallet_created">Wallet created.</string>
+    <string name="success_wallet_removed">Wallet removed.</string>
     <string name="success_transaction_added">Transaction logged.</string>
     <string name="success_transaction_removed">Transaction removed.</string>
     <string name="confirm_delete_transaction_title">Remove transaction?</string>
     <string name="confirm_delete_transaction_message">This will remove the transaction and update the wallet balance.</string>
+    <string name="confirm_delete_wallet_title">Remove wallet?</string>
+    <string name="confirm_delete_wallet_message">This will permanently delete \"%1$s\" and all transactions linked to it.</string>
     <string name="error_transaction_not_found">Transaction not found.</string>
     <string name="error_invalid_transaction">This transaction does not belong to your account.</string>
     <string name="error_insufficient_balance_delete">Cannot remove this transaction because the wallet balance would go below zero.</string>

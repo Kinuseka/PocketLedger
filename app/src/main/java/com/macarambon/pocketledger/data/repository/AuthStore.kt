@@ -102,9 +102,6 @@ class AuthStore(
         return PocketLedgerResult.Ok(Unit)
     }
 
-    fun getSessionEmail(context: Context): String =
-        session(context).getString(KEY_EMAIL, "").orEmpty()
-
     companion object {
         private const val KEY_LOGGED_IN = "logged_in"
         private const val KEY_USER_ID = "user_id"

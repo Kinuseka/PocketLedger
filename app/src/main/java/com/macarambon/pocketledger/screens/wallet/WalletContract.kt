@@ -21,5 +21,6 @@ interface WalletContract {
             interestRate: String,
             frequencyIndex: Int,
         )
+        fun onRemoveWalletClicked(walletId: Long)
     }
 }

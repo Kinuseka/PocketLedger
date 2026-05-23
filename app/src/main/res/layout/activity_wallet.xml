@@ -145,7 +145,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <androidx.recyclerview.widget.RecyclerView
+                <com.macarambon.pocketledger.utils.FullyExpandedRecyclerView
                     android:id="@+id/recyclerviewWallets"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

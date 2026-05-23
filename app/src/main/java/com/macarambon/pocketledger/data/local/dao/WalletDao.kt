@@ -25,4 +25,7 @@ interface WalletDao {
 
     @Query("SELECT COALESCE(SUM(startingAmount), 0.0) FROM wallets WHERE userId = :userId")
     suspend fun getStartingTotal(userId: Long): Double
+
+    @Query("DELETE FROM wallets WHERE id = :walletId")
+    suspend fun deleteById(walletId: Long)
 }

@@ -20,15 +20,6 @@ interface CategoryDao {
     @Query("SELECT * FROM categories ORDER BY name ASC")
     suspend fun getAll(): List<CategoryEntity>
 
-    @Query(
-        """
-        SELECT * FROM categories
-        WHERE name LIKE '%' || :query || '%'
-        ORDER BY name ASC
-        """,
-    )
-    suspend fun search(query: String): List<CategoryEntity>
-
     @Query("SELECT * FROM categories WHERE id = :categoryId LIMIT 1")
     suspend fun findById(categoryId: Long): CategoryEntity?
 

@@ -34,4 +34,10 @@ class WalletModel(
     ): PocketLedgerResult<Long> = helper.createWallet(
         context, userId, name, startingAmount, type, interestRate, interestFrequency,
     )
+
+    suspend fun removeWallet(
+        context: Context,
+        userId: Long,
+        walletId: Long,
+    ): PocketLedgerResult<Unit> = helper.removeWallet(context, userId, walletId)
 }
