@@ -1,27 +1,62 @@
 # PocketLedger
 
-PocketLedger is a mobile ledger app designed for Young Entrepreneurs and Students alike.
+PocketLedger is a mobile ledger app for young entrepreneurs and students. Track income and expenses across multiple wallets, categorize spending, and view your net worth at a glance.
 
-## Overview
+This repository contains the native **Android** client (`:app`), application id `com.macarambon.pocketledger`.
 
-PocketLedger helps you track your income and expenses with ease. Whether you're managing a small side business or keeping tabs on your personal budget, PocketLedger gives you a clear picture of your finances right from your phone.
+## Requirements
 
-## Features
+- **JDK 17** (use Android Studio JBR if your system JDK is newer)
+- **Android Studio** Koala or newer recommended
+- Android **SDK** with `compileSdk 34` as configured in the module
 
-- **Income & Expense Tracking** – Log transactions quickly and categorize them effortlessly.
-- **Balance Overview** – See your current balance at a glance.
-- **Transaction History** – Review past transactions to understand your spending habits.
-- **Simple & Intuitive UI** – Designed with students and young entrepreneurs in mind.
+## Build and run
 
-## Getting Started
+Set `JAVA_HOME` to JDK 17 if needed, then:
 
-1. Download and install the app on your mobile device.
-2. Create an account or start using it locally.
-3. Add your first transaction and start managing your finances.
+```bash
+./gradlew assembleDebug
+```
 
-## Contributing
+Create `local.properties` with your SDK path if it is missing:
 
-Contributions are welcome! Feel free to open an issue or submit a pull request.
+```properties
+sdk.dir=C\:\\Users\\YOUR_USER\\AppData\\Local\\Android\\Sdk
+```
+
+Install the debug APK on a device or emulator, or run from Android Studio.
+
+## Architecture
+
+The app follows a layered structure aligned with [Renvest-mobile](https://github.com/gael55x/Renvest-mobile):
+
+| Layer | Package | Role |
+|--------|---------|------|
+| Application | `com.macarambon.pocketledger.app` | `PocketLedgerApplication`, shared `AuthStore` + `PocketLedgerDatabase` wiring |
+| Screens | `com.macarambon.pocketledger.screens.*` | Vertical feature slices (login, register, dashboard, profile, wallet, transaction, category) |
+| Data | `com.macarambon.pocketledger.data` | `PocketLedgerResult`, `AuthStore`, **Room/SQLite** (users, wallets, categories, transactions) |
+| Utils | `com.macarambon.pocketledger.utils` | Activity extensions, form helpers, `authStore()`, `pocketLedgerDb()` |
+
+More detail:
+
+- [docs/architecture.md](docs/architecture.md) — Vertical slicing, MVP pattern, how to add a screen
+- [docs/database.md](docs/database.md) — Room schema, business rules, ER diagram
+- [docs/screens.md](docs/screens.md) — Per-screen reference (files, navigation, validation)
+- [docs/ui-guide.md](docs/ui-guide.md) — Material 3 theme, layouts, form conventions
+- [PRESENTATION.md](PRESENTATION.md) — Code walkthrough script for Vertical Slicing + MVP demo
+
+## UI and design system
+
+- **Theme:** `Theme.PocketLedger` (Material 3 DayNight, no action bar)
+- **Text fields:** `Widget.PocketLedger.TextInput.Outlined`
+- **Buttons:** `Widget.PocketLedger.Button.Primary` / `.Outlined` / `.Text`
+- **Spacing:** `padding_screen_*`, `spacing_section`, `spacing_field` in `res/values/dimens.xml`
+- **Edge-to-edge:** use `setupPocketLedgerContent(R.layout.*, R.id.root)` on every Activity
+
+## Git workflow
+
+- **Branches:** `feature/*`, `fix/*`, `refactor/*`
+- **Commits:** [Conventional Commits](https://www.conventionalcommits.org/) — e.g. `feat: add wallet screen`, `fix: reject future transaction dates`
 
 ## License
 

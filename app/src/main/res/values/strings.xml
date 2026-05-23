@@ -1,3 +1,128 @@
 <resources>
     <string name="app_name">PocketLedger</string>
+
+    <!-- Actions -->
+    <string name="action_login">Log In</string>
+    <string name="action_register">Create Account</string>
+    <string name="action_logging_in">Logging in…</string>
+    <string name="action_registering">Creating account…</string>
+    <string name="action_logout">Log Out</string>
+    <string name="action_save">Save</string>
+    <string name="action_add">Add</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_back">Back</string>
+    <string name="action_submit_transaction">Log Transaction</string>
+
+    <!-- Links -->
+    <string name="link_register">Don\'t have an account? Register</string>
+    <string name="link_login">Already have an account? Log in</string>
+
+    <!-- Hints -->
+    <string name="hint_email">Email address</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm password</string>
+    <string name="hint_first_name">First name</string>
+    <string name="hint_middle_name">Middle name</string>
+    <string name="hint_last_name">Last name</string>
+    <string name="hint_wallet_name">Wallet name</string>
+    <string name="hint_starting_amount">Starting amount</string>
+    <string name="hint_interest_rate">Interest rate (0–100)</string>
+    <string name="hint_amount">Amount</string>
+    <string name="hint_date">Transaction date and time</string>
+    <string name="hint_category_name">Category name</string>
+    <string name="hint_search_category">Search categories</string>
+    <string name="hint_applied_interest_rate">Applied interest rate (%)</string>
+
+    <!-- Labels -->
+    <string name="label_wallet_type">Wallet type</string>
+    <string name="label_interest_frequency">Interest frequency</string>
+    <string name="label_select_wallet">Wallet</string>
+    <string name="label_select_category">Category</string>
+    <string name="label_transaction_type">Transaction type</string>
+    <string name="label_filter_category">Filter by category</string>
+    <string name="label_net_worth">Net Worth</string>
+    <string name="label_total_income">Total Income</string>
+    <string name="label_total_expense">Total Expenses</string>
+    <string name="label_my_wallets">My Wallets</string>
+    <string name="label_create_wallet">Create Wallet</string>
+    <string name="label_add_category">Add Category</string>
+    <string name="label_transaction_history">Transaction History</string>
+    <string name="label_profile">Profile</string>
+    <string name="label_all_categories">All categories</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_wallet_management">Wallet Management</string>
+    <string name="nav_transaction_history">Transaction History</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_wallets">Wallets</string>
+    <string name="nav_log_transaction">Log Transaction</string>
+    <string name="nav_categories">Categories</string>
+
+    <!-- Dashboard -->
+    <string name="label_current_balance">Current Balance</string>
+    <string name="label_started_at">Started at %1$s</string>
+    <string name="label_net_since_start">Net since start</string>
+    <string name="label_add_transaction">Add Transaction</string>
+    <string name="label_manage_categories">Manage Categories</string>
+    <string name="label_view_all">View all</string>
+    <string name="label_all_wallets">All Wallets</string>
+    <string name="label_newest_first">Newest first</string>
+    <string name="label_back_to_dashboard">Back to dashboard</string>
+    <string name="label_gain">gain</string>
+    <string name="label_loss">loss</string>
+    <string name="page_wallet_management">Wallet Management</string>
+
+    <!-- Wallet types -->
+    <string name="wallet_type_checking">Checking</string>
+    <string name="wallet_type_savings">Savings</string>
+    <string name="wallet_type_cash">Cash</string>
+
+    <!-- Transaction types -->
+    <string name="transaction_type_income">Income</string>
+    <string name="transaction_type_expense">Expense</string>
+    <string name="transaction_type_interest">Interest</string>
+
+    <!-- Interest frequency -->
+    <string name="interest_daily">Daily</string>
+    <string name="interest_monthly">Monthly</string>
+    <string name="interest_yearly">Yearly</string>
+
+    <!-- Errors -->
+    <string name="error_field_required">This field is required.</string>
+    <string name="error_invalid_email">Please enter a valid email address.</string>
+    <string name="error_password_mismatch">Passwords do not match.</string>
+    <string name="error_email_taken">An account with this email already exists.</string>
+    <string name="error_wrong_credentials">Invalid email or password.</string>
+    <string name="error_session_expired">Session expired. Please log in again.</string>
+    <string name="error_invalid_amount">Please enter a valid positive amount.</string>
+    <string name="error_future_date">Transaction date and time cannot be in the future.</string>
+    <string name="error_invalid_datetime">Please enter a valid transaction date and time.</string>
+    <string name="error_category_duplicate">A category with this name already exists.</string>
+    <string name="error_category_not_found">Category not found.</string>
+    <string name="error_wallet_not_found">Wallet not found.</string>
+    <string name="error_invalid_wallet">This wallet does not belong to your account.</string>
+    <string name="error_insufficient_balance">Insufficient wallet balance.</string>
+    <string name="error_applied_interest_not_allowed">Applied interest rate is only allowed for interest transactions.</string>
+    <string name="error_interest_not_allowed">Only savings wallets may have interest settings.</string>
+    <string name="error_interest_required">Interest rate and frequency are required for Savings wallets.</string>
+    <string name="error_interest_rate_range">Interest rate must be between 0 and 100.</string>
+    <string name="error_applied_interest_required">Applied interest rate is required for Interest transactions.</string>
+    <string name="error_no_account">No account found. Please register first.</string>
+
+    <!-- Success -->
+    <string name="success_registered">Account created. Please log in.</string>
+    <string name="success_wallet_created">Wallet created.</string>
+    <string name="success_transaction_added">Transaction logged.</string>
+    <string name="success_transaction_removed">Transaction removed.</string>
+    <string name="confirm_delete_transaction_title">Remove transaction?</string>
+    <string name="confirm_delete_transaction_message">This will remove the transaction and update the wallet balance.</string>
+    <string name="error_transaction_not_found">Transaction not found.</string>
+    <string name="error_invalid_transaction">This transaction does not belong to your account.</string>
+    <string name="error_insufficient_balance_delete">Cannot remove this transaction because the wallet balance would go below zero.</string>
+    <string name="success_category_added">Category added.</string>
+
+    <!-- Dashboard -->
+    <string name="welcome_user">Welcome, %1$s!</string>
+    <string name="currency_format">₱%1$s</string>
 </resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="grid_1">8dp</dimen>
+    <dimen name="grid_2">16dp</dimen>
+    <dimen name="grid_3">24dp</dimen>
+    <dimen name="grid_4">32dp</dimen>
+    <dimen name="padding_screen_horizontal">24dp</dimen>
+    <dimen name="padding_screen_vertical">24dp</dimen>
+    <dimen name="spacing_section">24dp</dimen>
+    <dimen name="spacing_field">16dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="input_corner">12dp</dimen>
+    <dimen name="login_field_min_height">56dp</dimen>
+</resources>

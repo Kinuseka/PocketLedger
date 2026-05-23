@@ -1,9 +1,42 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
     <style name="Base.Theme.PocketLedger" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimaryContainer">@color/primary_dark</item>
+        <item name="colorOnPrimaryContainer">@color/on_primary</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
     <style name="Theme.PocketLedger" parent="Base.Theme.PocketLedger" />
+
+    <style name="Widget.PocketLedger.TextInput.Outlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">@dimen/input_corner</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/input_corner</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/input_corner</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/input_corner</item>
+    </style>
+
+    <style name="Widget.PocketLedger.Button.Primary" parent="Widget.Material3.Button">
+        <item name="android:minHeight">@dimen/login_field_min_height</item>
+        <item name="backgroundTint">@color/primary</item>
+    </style>
+
+    <style name="Widget.PocketLedger.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="Widget.PocketLedger.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">@color/link</item>
+    </style>
+
+    <style name="TextAppearance.PocketLedger.ScreenTitle" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>
